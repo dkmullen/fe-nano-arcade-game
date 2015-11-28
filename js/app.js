@@ -97,16 +97,22 @@ Player.prototype.handleInput = function(input, allowedKeys) {
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 
-//Math.random varies horizontal start point from -0.2 to 240
-var enemy1 = new Enemy('images/enemy-bug.png', (Math.random() - 0.2) * 300, 65, (Math.random() * 550) + 200);
-var enemy2 = new Enemy('images/enemy-bug.png', (Math.random() - 0.2) * 300, 147, (Math.random() * 500) + 200);
-var enemy3 = new Enemy('images/enemy-bug.png', (Math.random() - 0.2) * 300, 230, (Math.random() * 500) + 200);
-//and between -200 and -700 for three that begin off screen
-var enemy4 = new Enemy('images/enemy-bug.png', (Math.random() * -500) - 200, 65, (Math.random() * 500) + 200);
-var enemy5 = new Enemy('images/enemy-bug.png', (Math.random() * -500) - 200, 147, (Math.random() * 500) + 200);
-var enemy6 = new Enemy('images/enemy-bug.png', (Math.random() * -500) - 200, 230, (Math.random() * 600) + 200);
 
-var allEnemies = [enemy1, enemy2, enemy3, enemy4, enemy5, enemy6];
+
+var allEnemies = [];
+for (i=0; i < 6; i++) {
+	//x[0] varies start point from just off the board to about halfway across the board...
+	//...and x[1] varies placement off (to the left) of the board
+	var x = [((Math.random() - 0.2) * 450), ((Math.random() * -500) - 200)];
+	//y values chosen to center enemies vertically on path
+	var y = [65, 147, 230];
+	//provides a variety of speeds
+	speed = ((Math.random() * 600) + 200);
+	//choose x[0] or x[1] and y[0], y[1] or y[2]
+	var n = new Enemy(this.sprite, x[(Math.round(Math.random()))], y[(Math.floor(Math.random()* 3))], speed);
+	//add n to the array and repeat the loop till there are six enemies
+	allEnemies.push(n);
+};
 var player = new Player();
 
 
