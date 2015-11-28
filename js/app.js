@@ -1,5 +1,5 @@
 // Enemies our player must avoid
-var Enemy = function(sprite, x, y) {
+var Enemy = function(sprite, x, y, speed) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
@@ -8,6 +8,7 @@ var Enemy = function(sprite, x, y) {
     this.sprite = 'images/enemy-bug.png';
 	this.x = x;
 	this.y = y;
+	this.speed = speed;
 };
 
 // Update the enemy's position, required method for game
@@ -16,8 +17,13 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
-	speed = Math.floor(((Math.random() + 0.5) * 250));
-	this.x += speed * dt;
+	this.x += this.speed * dt;
+	//Send enemies back to a random spot with a negative x value
+	//and a new random speed
+	if (this.x > 500) {
+		this.x = ((Math.random()* -900) - 100);
+		this.speed = (Math.random() * 800) + 200;
+	}
 };
 
 // Draw the enemy on the screen, required method for game
@@ -87,10 +93,15 @@ Player.prototype.handleInput = function(input, allowedKeys) {
 // Place the player object in a variable called player
 
 //Math.random varies horizontal start point from -0.2 to 240
-var enemy1 = new Enemy('images/enemy-bug.png', (Math.random() - 0.2) * 300, 65);
-var enemy2 = new Enemy('images/enemy-bug.png', (Math.random() - 0.2) * 300, 147);
-var enemy3 = new Enemy('images/enemy-bug.png', (Math.random() - 0.2) * 300, 230);
-var allEnemies = [enemy1, enemy2, enemy3];
+var enemy1 = new Enemy('images/enemy-bug.png', (Math.random() - 0.2) * 300, 65, (Math.random() * 550) + 200);
+var enemy2 = new Enemy('images/enemy-bug.png', (Math.random() - 0.2) * 300, 147, (Math.random() * 500) + 200);
+var enemy3 = new Enemy('images/enemy-bug.png', (Math.random() - 0.2) * 300, 230, (Math.random() * 500) + 200);
+//and between -200 and -700 for three that begin off screen
+var enemy4 = new Enemy('images/enemy-bug.png', (Math.random() * -500) - 200, 65, (Math.random() * 500) + 200);
+var enemy5 = new Enemy('images/enemy-bug.png', (Math.random() * -500) - 200, 147, (Math.random() * 500) + 200);
+var enemy6 = new Enemy('images/enemy-bug.png', (Math.random() * -500) - 200, 230, (Math.random() * 600) + 200);
+
+var allEnemies = [enemy1, enemy2, enemy3, enemy4, enemy5, enemy6];
 var player = new Player();
 
 
