@@ -37,17 +37,19 @@ Enemy.prototype.render = function() {
 function Player(sprite, x, y) {
 	this.sprite = 'images/char-boy.png';
 	this.x = 203;
-	this.y = 400;
+	this.y = 396;
+};
+function checkCollisions() {
+	for (i = 0; i < allEnemies.length; i++) {
+		if (player.y == allEnemies[i].y && Math.abs(player.x - allEnemies[i].x) < 80) {
+			player.y = 396, player.x = 203;
+		}
+	}
 };
 Player.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
-	for (i = 0; i < allEnemies.length; i++) {
-		if (this.x - allEnemies[i].x < 20 && this.y - allEnemies[i].y < 10) {
-			player.y = 400, player.x = 203;
-		}
-	}
 };
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
@@ -55,19 +57,19 @@ Player.prototype.render = function() {
 
 //The following controls the player's movement
 Player.prototype.handleInput = function(input, allowedKeys) {
-	verticalMove = 80;
+	verticalMove = 83;
 	horizontalMove = 100;
 	if (input == 'up') {
 		/* if player completely reaches the water, sends him 
 		back to the bottom */
 		player.y -=verticalMove;
 		if (player.y <= 30) {
-			player.y = 400, player.x = 203;
+			player.y = 396, player.x = 203;
 		}
 	}
 	else if (input == 'down') {
 		//keeps player from going below start point
-		if (player.y < 400) {
+		if (player.y < 396) {
 			player.y +=verticalMove;
 		}
 	}
@@ -77,7 +79,7 @@ Player.prototype.handleInput = function(input, allowedKeys) {
 			player.x -=horizontalMove;
 		}
 		else {
-			//Keeps player from going past 3
+			//Keeps player on the board
 			player.x = 3;
 		}
 	}
@@ -86,10 +88,9 @@ Player.prototype.handleInput = function(input, allowedKeys) {
 			player.x +=horizontalMove;
 		}
 		else {
-			// Stops player at 403
+			// keeps player on the board
 			player.x = 403
 		}
-		
 	}
 };
 
@@ -97,15 +98,13 @@ Player.prototype.handleInput = function(input, allowedKeys) {
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 
-
-
 var allEnemies = [];
 for (i=0; i < 6; i++) {
 	//x[0] varies start point from just off the board to about halfway across the board...
 	//...and x[1] varies placement off (to the left) of the board
 	var x = [((Math.random() - 0.2) * 450), ((Math.random() * -500) - 200)];
 	//y values chosen to center enemies vertically on path
-	var y = [65, 147, 230];
+	var y = [64, 147, 230];
 	//provides a variety of speeds
 	speed = ((Math.random() * 600) + 200);
 	//choose x[0] or x[1] and y[0], y[1] or y[2]
