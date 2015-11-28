@@ -43,6 +43,11 @@ Player.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+	for (i = 0; i < allEnemies.length; i++) {
+		if (this.x - allEnemies[i].x < 20 && this.y - allEnemies[i].y < 10) {
+			player.y = 400, player.x = 203;
+		}
+	}
 };
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
