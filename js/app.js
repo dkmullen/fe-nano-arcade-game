@@ -1,3 +1,20 @@
+//Boundaries of the game board
+var leftWall = 3;
+var rightWall = 403;
+var bottomWall = 396;
+var water = 63;
+var startX = 203;
+var startY = 396;
+var treasureX = [103, 203, 303];
+var treasureY = [147, 64];
+var treasureSprite = ['images/Key.png', 'images/Star.png', 'images/Gem Blue.png'];
+var twoOptions = function() {
+	return Math.round(Math.random());
+};
+var threeOptions = function() {
+	return Math.floor(Math.random()* 3);
+};
+
 // Enemies our player must avoid
 var Enemy = function(sprite, x, y, speed) {
     // Variables applied to each of our instances go here,
@@ -36,8 +53,12 @@ Enemy.prototype.render = function() {
 // a handleInput() method.
 function Player(sprite, x, y) {
 	this.sprite = 'images/char-cat-girl.png';
-	this.x = 203;
-	this.y = 396;
+	this.x = startX;
+	this.y = startY;
+	this.reset = function() {
+		player.x = startX;
+		player.y = startY;
+	};
 };
 Player.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
@@ -56,38 +77,30 @@ Player.prototype.handleInput = function(input, allowedKeys) {
 		/* if player completely reaches the water, sends him 
 		back to the bottom */
 		player.y -=verticalMove;
-		if (player.y <= 30) {
-			player.y = 396, player.x = 203;
+		if (player.y <= water) {
+			player.reset();
 		}
 	}
 	else if (input == 'down') {
 		//keeps player from going below start point
-		if (player.y < 396) {
+		if (player.y < bottomWall) {
 			player.y +=verticalMove;
 		}
 	}
 	else if (input == 'left') {
 		// keeps player on the board
-		if (player.x >= 103) {
+		if (player.x > leftWall) {
 			player.x -=horizontalMove;
-		}
-		else {
-			//Keeps player on the board
-			player.x = 3;
 		}
 	}
 	else if (input == 'right') {
-		if (player.x <= 303) {
+		if (player.x < rightWall) {
 			player.x +=horizontalMove;
-		}
-		else {
-			// keeps player on the board
-			player.x = 403
 		}
 	}
 };
 function Treasure(sprite, x, y) {
-	this.sprite = 'images/Key.png';
+	this.sprite = sprite;
 	this.x = x;
 	this.y = y;
 };
@@ -99,11 +112,14 @@ Treasure.prototype.render = function() {
 function checkCollisions() {
 	for (i = 0; i < allEnemies.length; i++) {
 		if (player.y == allEnemies[i].y && Math.abs(player.x - allEnemies[i].x) < 80) {
-			player.y = 396, player.x = 203;
+			player.reset();
 		}
 	}
-	if (player.x == treasure.x && player.y == treasure.y) {
-		treasure.x = 3, treasure.y = 396;
+	for (i = 0; i < allTreasures.length; i++) {
+		if (player.x == allTreasures[i].x && player.y == allTreasures[i].y) {
+			allTreasures[i].x = 3;
+			allTreasures[i].y = 396;
+		}
 	}
 };
 
@@ -121,16 +137,18 @@ for (i=0; i < 6; i++) {
 	//provides a variety of speeds
 	speed = ((Math.random() * 600) + 200);
 	//choose x[0] or x[1] and y[0], y[1] or y[2]
-	var n = new Enemy(this.sprite, x[(Math.round(Math.random()))], y[(Math.floor(Math.random()* 3))], speed);
+	var n = new Enemy(this.sprite, x[twoOptions()], y[threeOptions()], speed);
 	//add n to the array and repeat the loop till there are six enemies
 	allEnemies.push(n);
 };
 var player = new Player();
 
-var treasureX = [103, 203, 303];
-var treasureY = [147, 64];
-var treasure = new Treasure(this.sprite, treasureX[(Math.floor(Math.random()* 3))], treasureY[(Math.round(Math.random()))]);
-
+var allTreasures = [];
+for (i = 0; i <= (threeOptions()); i++) {
+	var treasure = new Treasure(treasureSprite[threeOptions()], 
+	   treasureX[threeOptions()], treasureY[twoOptions()]);
+	allTreasures.push(treasure);
+};
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
 document.addEventListener('keyup', function(e) {
