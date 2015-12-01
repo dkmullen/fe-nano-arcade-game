@@ -35,16 +35,9 @@ Enemy.prototype.render = function() {
 // This class requires an update(), render() and
 // a handleInput() method.
 function Player(sprite, x, y) {
-	this.sprite = 'images/char-boy.png';
+	this.sprite = 'images/char-cat-girl.png';
 	this.x = 203;
 	this.y = 396;
-};
-function checkCollisions() {
-	for (i = 0; i < allEnemies.length; i++) {
-		if (player.y == allEnemies[i].y && Math.abs(player.x - allEnemies[i].x) < 80) {
-			player.y = 396, player.x = 203;
-		}
-	}
 };
 Player.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
@@ -93,6 +86,26 @@ Player.prototype.handleInput = function(input, allowedKeys) {
 		}
 	}
 };
+function Treasure(sprite, x, y) {
+	this.sprite = 'images/Key.png';
+	this.x = x;
+	this.y = y;
+};
+Treasure.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+
+
+function checkCollisions() {
+	for (i = 0; i < allEnemies.length; i++) {
+		if (player.y == allEnemies[i].y && Math.abs(player.x - allEnemies[i].x) < 80) {
+			player.y = 396, player.x = 203;
+		}
+	}
+	if (player.x == treasure.x && player.y == treasure.y) {
+		treasure.x = 3, treasure.y = 396;
+	}
+};
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
@@ -114,6 +127,9 @@ for (i=0; i < 6; i++) {
 };
 var player = new Player();
 
+var treasureX = [103, 203, 303];
+var treasureY = [147, 64];
+var treasure = new Treasure(this.sprite, treasureX[(Math.floor(Math.random()* 3))], treasureY[(Math.round(Math.random()))]);
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.

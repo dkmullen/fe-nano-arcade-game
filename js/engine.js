@@ -95,7 +95,7 @@ var Engine = (function(global) {
             enemy.update(dt);
         });
         player.update();
-    }
+	}
 
     /* This function initially draws the "game level", it will then call
      * the renderEntities function. Remember, this function is called every
@@ -153,7 +153,8 @@ var Engine = (function(global) {
         });
 
         player.render();
-    }
+		treasure.render();
+	}
 
     /* This function does nothing but it could have been a good place to
      * handle game reset states - maybe a new game menu or a game over screen
@@ -172,7 +173,8 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/char-boy.png'
+        'images/char-cat-girl.png',
+		'images/Key.png'
     ]);
     Resources.onReady(init);
 
