@@ -3,7 +3,7 @@ var leftWall = 3;
 var rightWall = 403;
 var bottomWall = 396;
 var water = 63;
-//starting point for the player
+//starting and reset point for the player
 var startX = 203;
 var startY = 396;
 //boundaries of the six-square treasure area
@@ -22,6 +22,11 @@ var threeOptions = function() {
 };
 var tries = 3;
 var score = 0;
+var scoring = function() {
+	document.getElementById("score_box").innerHTML = "Score: " + score;
+	document.getElementById("tries_remaining").innerHTML = "Tries Remaining: " + tries;
+};
+scoring();
 
 // Enemies our player must avoid
 var Enemy = function(sprite, x, y, speed) {
@@ -47,7 +52,7 @@ Enemy.prototype.update = function(dt) {
 	//and a new random speed
 	if (this.x > 500) {
 		this.x = ((Math.random()* -900) - 100);
-		this.speed = (Math.random() * 800) + 200;
+		this.speed = (Math.random() * 400) + 200;
 	}
 };
 
@@ -66,8 +71,7 @@ function Player(sprite, x, y) {
 	this.reset = function() {
 		player.x = startX;
 		player.y = startY;
-		tries -= 1;
-		document.getElementById("tries_remaining").innerHTML = "Tries remaining: " + tries;
+		scoring();
 		if (tries == 0) {
 			alert("Game Over! Score: " + score)
 		}
@@ -91,9 +95,10 @@ Player.prototype.handleInput = function(input, allowedKeys) {
 		back to the bottom */
 		player.y -=verticalMove;
 		if (player.y <= water) {
-			player.reset();
 			score += 200;
-			document.getElementById("score_box").innerHTML = "Score: " + score;
+			tries += 1;
+			player.reset();
+			scoring();
 		}
 	}
 	else if (input == 'down') {
@@ -127,18 +132,20 @@ Treasure.prototype.render = function() {
 function checkCollisions() {
 	for (i = 0; i < allEnemies.length; i++) {
 		if (player.y == allEnemies[i].y && Math.abs(player.x - allEnemies[i].x) < 80) {
+			tries -= 1;
 			player.reset();
 		}
 	}
 	for (i = 0; i < allTreasures.length; i++) {
 		if (player.x == allTreasures[i].x && player.y == allTreasures[i].y) {
-			allTreasures[i].x = 3;
+			allTreasures[i].x = -300;
 			allTreasures[i].y = 396;
 			score += 100;
-			document.getElementById("score_box").innerHTML = "Score: " + score;
+			scoring();
 		}
 	}
 };
+
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
