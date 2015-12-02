@@ -3,17 +3,25 @@ var leftWall = 3;
 var rightWall = 403;
 var bottomWall = 396;
 var water = 63;
+//starting point for the player
 var startX = 203;
 var startY = 396;
+//boundaries of the six-square treasure area
 var treasureX = [103, 203, 303];
 var treasureY = [147, 64];
+//three images to be used for treasure
 var treasureSprite = ['images/Key.png', 'images/Star.png', 'images/Gem Blue.png'];
+//two frequently-used math formulas
+//the first picks between 0 and 1
 var twoOptions = function() {
 	return Math.round(Math.random());
 };
+//and the second picks from 0, 1, and 2
 var threeOptions = function() {
 	return Math.floor(Math.random()* 3);
 };
+var tries = 3;
+var score = 0;
 
 // Enemies our player must avoid
 var Enemy = function(sprite, x, y, speed) {
@@ -58,6 +66,11 @@ function Player(sprite, x, y) {
 	this.reset = function() {
 		player.x = startX;
 		player.y = startY;
+		tries -= 1;
+		document.getElementById("tries_remaining").innerHTML = "Tries remaining: " + tries;
+		if (tries == 0) {
+			alert("Game Over! Score: " + score)
+		}
 	};
 };
 Player.prototype.update = function(dt) {
@@ -79,6 +92,8 @@ Player.prototype.handleInput = function(input, allowedKeys) {
 		player.y -=verticalMove;
 		if (player.y <= water) {
 			player.reset();
+			score += 200;
+			document.getElementById("score_box").innerHTML = "Score: " + score;
 		}
 	}
 	else if (input == 'down') {
@@ -119,6 +134,8 @@ function checkCollisions() {
 		if (player.x == allTreasures[i].x && player.y == allTreasures[i].y) {
 			allTreasures[i].x = 3;
 			allTreasures[i].y = 396;
+			score += 100;
+			document.getElementById("score_box").innerHTML = "Score: " + score;
 		}
 	}
 };
