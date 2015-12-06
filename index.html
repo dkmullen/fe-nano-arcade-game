@@ -6,21 +6,29 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-	<div score_line>
-		<span id="score_box">Score:</span>
-		<span id="tries_remaining"></span>
+	<script src="js/resources.js"></script>    
+	<script src="js/engine.js"></script>
+	<div id="score_line">
+		<span id="score_box"></span>
+		<span id="lives_remaining"></span>
 		<span id="high_score"></span>
 	</div>	
-	<div sprites>
+	<div id="sprites">
 		<span id="sprite1"><img src="images/char-boy.png"></span>
 		<span id="sprite2"><img src="images/char-horn-girl.png"></span>
 		<span id="sprite3"><img src="images/char-pink-girl.png"></span>
 		<span id="sprite4"><img src="images/char-princess-girl.png"></span>
 		<span id="sprite5"><img src="images/char-cat-girl.png"></span>
 	</div>
-    <script src="js/resources.js"></script>
+	<div id="choose_sprite">Click any image to choose your player anytime.</div>
+	<div id="directions"><strong>HOW TO PLAY:</strong> Move your player up across 
+	the grass and the stones to the water without getting hit by a bug. You get 
+	<strong>THREE LIVES</strong> to start with, but each time you reach the water, you earn an extra life. 
+	Also, you get <strong>200 POINTS</strong> whenever you reach the water and <strong>100 POINTS</strong> 
+	for each treasure you pick up along the way.
+	</div>
     <script src="js/app.js"></script>
-    <script src="js/engine.js"></script>
+
 
 
 </body>

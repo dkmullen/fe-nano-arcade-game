@@ -20,21 +20,27 @@ var twoOptions = function() {
 var threeOptions = function() {
 	return Math.floor(Math.random()* 3);
 };
-var tries = 3;
+var lives = 3;
 var score = 0;
 var highScore = 0;
 var scoring = function() {
-	document.getElementById("score_box").innerHTML = "Score: " + score + " ---";
-	document.getElementById("tries_remaining").innerHTML = "Tries Remaining: " + tries + " ---";
-	document.getElementById("high_score").innerHTML = "Your High Score: " + highScore;
+	document.getElementById("score_box").innerHTML = "Score: <strong>" + score + "</strong> ---";
+	document.getElementById("lives_remaining").innerHTML = "Lives Remaining: <strong>" + lives + "</strong> ---";
+	document.getElementById("high_score").innerHTML = "Your High Score: <strong>" + highScore +"</strong>";
 };
-//put the starting score of 0 and tries remaining on the screen as game starts
+//put the starting score of 0 and lives remaining on the screen as game starts
 scoring();
-document.getElementById("sprite1").addEventListener("click", chooseSprite);
 
-function chooseSprite() {
-	player.sprite = 'images/char-boy.png';
-};
+document.getElementById("sprite1").addEventListener("click", function()
+	{player.sprite = 'images/char-boy.png';});
+document.getElementById("sprite2").addEventListener("click", function()
+	{player.sprite = 'images/char-horn-girl.png';});
+document.getElementById("sprite3").addEventListener("click", function()
+	{player.sprite = 'images/char-pink-girl.png';});
+document.getElementById("sprite4").addEventListener("click", function()
+	{player.sprite = 'images/char-princess-girl.png';});
+document.getElementById("sprite5").addEventListener("click", function()
+	{player.sprite = 'images/char-cat-girl.png';});
 
 
 // Enemies our player must avoid
@@ -77,18 +83,18 @@ function Player(sprite, x, y) {
 	this.sprite = 'images/char-cat-girl.png';
 	this.x = startX;
 	this.y = startY;
-	//reset puts player back to the start, updates score and tries...
+	//reset puts player back to the start, updates score and lives...
 	this.reset = function() {
 		player.x = startX;
 		player.y = startY;
-		//...and checks to see if any tries are left
-		if (tries == 0) {
+		//...and checks to see if any lives are left
+		if (lives == 0) {
 			alert("Game Over! Score: " + score);
 			if (score > highScore) {
 				highScore = score;
 			}
 			score = 0;
-			tries = 3;
+			lives = 3;
 		}
 		scoring();
 	};
@@ -109,10 +115,10 @@ Player.prototype.handleInput = function(input, allowedKeys) {
 	if (input == 'up') {
 		player.y -=verticalMove;
 		/* if player completely reaches the water, add 200 to score, add a try,
-		send player back to start, update onscreen score/tries */
+		send player back to start, update onscreen score/lives */
 		if (player.y <= water) {
 			score += 200;
-			tries += 1;
+			lives += 1;
 			player.reset();
 			scoring();
 		}
@@ -153,7 +159,7 @@ function checkCollisions() {
 		//see if y values match exactly and x values are within 80 in either direction
 		//the value of 80 helps eliminate collisons of sprite margins
 		if (player.y == allEnemies[i].y && Math.abs(player.x - allEnemies[i].x) < 80) {
-			tries -= 1;
+			lives -= 1;
 			player.reset();
 		}
 	}
