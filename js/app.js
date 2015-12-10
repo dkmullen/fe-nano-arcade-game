@@ -100,25 +100,30 @@ function Player(sprite, x, y) {
 	//position the sprite at the start point
 	this.x = startX;
 	this.y = startY;
+};
+	
+Player.reset = function () {
 	//reset puts player back to the start, updates score and lives...
-	this.reset = function() {
-		player.x = startX;
-		player.y = startY;
-		//...and checks to see if any lives are left
-		if (lives == 0) {
-			//stops the game with an alert, reports the score
-			alert("Game Over! Score: " + score);
-			//updates the high score if appropriate
-			if (score > highScore) {
-				highScore = score;
-			}
-			//resets score and lives for a new game...
-			score = 0;
-			lives = 3;
+	player.x = startX;
+	player.y = startY;
+	//...and checks to see if any lives are left
+	if (lives == 0) {
+		//stops the game with an alert, reports the score
+		alert("Game Over! Score: " + score);
+		//updates the high score if appropriate
+		if (score > highScore) {
+			highScore = score;
 		}
-		//...and calls scoring function to update score and lives
-		scoring();
-	};
+		score = 0;
+		lives = 3;
+		//empties allTreasures and allEnemies and rebuilds them
+		allTreasures = [];
+		allEnemies = [];
+		newTreasure();
+		newEnemy();
+	}
+	//...and calls scoring function to update score and lives
+	scoring();
 };
 Player.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
@@ -141,7 +146,7 @@ Player.prototype.handleInput = function(input, allowedKeys) {
 		if (player.y <= water) {
 			score += 200;
 			lives += 1;
-			player.reset();
+			Player.reset();
 			scoring();
 		}
 	}
@@ -185,7 +190,7 @@ function checkCollisions() {
 				allEnemies[i].x) < 80) {
 			//removes a life and send player back to start
 			lives -= 1;
-			player.reset();
+			Player.reset();
 		}
 	}
 	//check player-treasure collisons
@@ -239,7 +244,6 @@ var newTreasure = function() {
 		var treasure = new Treasure(treasureSprite[threeOptions()], 
 		   treasureX[threeOptions()], treasureY[twoOptions()]);
 		allTreasures.push(treasure);
-			
 	}
 };
 newTreasure();
