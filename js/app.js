@@ -6,11 +6,14 @@ var water = 63;
 //starting and reset point for the player
 var startX = 203;
 var startY = 396;
-//boundaries of the six-square treasure area
+//boundaries of the six-square treasure area, to be chosen and paired randomly
 var treasureX = [103, 203, 303];
 var treasureY = [147, 64];
 //three images to be used for treasure
-var treasureSprite = ['images/Key.png', 'images/Star.png', 'images/Gem Blue.png'];
+var treasureSprite = ['images/Key.png', 
+					  'images/Star.png',
+					  'images/Gem Blue.png'
+					 ];
 //two frequently-used math formulas
 //the first picks between 0 and 1
 var twoOptions = function() {
@@ -20,28 +23,40 @@ var twoOptions = function() {
 var threeOptions = function() {
 	return Math.floor(Math.random()* 3);
 };
+//variables to keep track of lives remaining, score and high score
 var lives = 3;
 var score = 0;
 var highScore = 0;
+//a function to put lives, score, high score on the screen (in the DOM)
 var scoring = function() {
-	document.getElementById("score_box").innerHTML = "Score: <strong>" + score + "</strong> ---";
-	document.getElementById("lives_remaining").innerHTML = "Lives Remaining: <strong>" + lives + "</strong> ---";
-	document.getElementById("high_score").innerHTML = "Your High Score: <strong>" + highScore +"</strong>";
+	document.getElementById("score_box").innerHTML = 
+		"Score: <strong>" + score + "</strong> ---";
+	document.getElementById("lives_remaining").innerHTML = 
+		"Lives Remaining: <strong>" + lives + "</strong> ---";
+	document.getElementById("high_score").innerHTML = 
+		"Your High Score: <strong>" + highScore +"</strong>";
 };
-//put the starting score of 0 and lives remaining on the screen as game starts
+//calls the function when the game loads
 scoring();
 
-document.getElementById("sprite1").addEventListener("click", function()
-	{player.sprite = 'images/char-boy.png';});
-document.getElementById("sprite2").addEventListener("click", function()
-	{player.sprite = 'images/char-horn-girl.png';});
-document.getElementById("sprite3").addEventListener("click", function()
-	{player.sprite = 'images/char-pink-girl.png';});
-document.getElementById("sprite4").addEventListener("click", function()
-	{player.sprite = 'images/char-princess-girl.png';});
-document.getElementById("sprite5").addEventListener("click", function()
-	{player.sprite = 'images/char-cat-girl.png';});
+//an array storing all the player images
+var playerImages = ['images/char-boy.png',
+					'images/char-horn-girl.png',
+					'images/char-pink-girl.png',
+					'images/char-princess-girl.png',
+					'images/char-cat-girl.png'
+				   ];
 
+document.getElementById("sprite1").addEventListener("click", function()
+	{player.sprite = playerImages[0];});
+document.getElementById("sprite2").addEventListener("click", function()
+	{player.sprite = playerImages[1];});
+document.getElementById("sprite3").addEventListener("click", function()
+	{player.sprite = playerImages[2];});
+document.getElementById("sprite4").addEventListener("click", function()
+	{player.sprite = playerImages[3];});
+document.getElementById("sprite5").addEventListener("click", function()
+	{player.sprite = playerImages[4];});
 
 // Enemies our player must avoid
 var Enemy = function(sprite, x, y, speed) {
@@ -80,7 +95,9 @@ Enemy.prototype.render = function() {
 // This class requires an update(), render() and
 // a handleInput() method.
 function Player(sprite, x, y) {
-	this.sprite = 'images/char-cat-girl.png';
+	//pick one of the five player sprites at random to start the game
+	this.sprite = playerImages[Math.floor(Math.random()* 5)];
+	//position the sprite at the start point
 	this.x = startX;
 	this.y = startY;
 	//reset puts player back to the start, updates score and lives...
@@ -89,13 +106,17 @@ function Player(sprite, x, y) {
 		player.y = startY;
 		//...and checks to see if any lives are left
 		if (lives == 0) {
+			//stops the game with an alert, reports the score
 			alert("Game Over! Score: " + score);
+			//updates the high score if appropriate
 			if (score > highScore) {
 				highScore = score;
 			}
+			//resets score and lives for a new game...
 			score = 0;
 			lives = 3;
 		}
+		//...and calls scoring function to update score and lives
 		scoring();
 	};
 };
@@ -103,6 +124,7 @@ Player.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+	//values chosen to keep player roughly centered in the squares
 	verticalMove = 83;
 	horizontalMove = 100;
 };
@@ -114,8 +136,8 @@ Player.prototype.render = function() {
 Player.prototype.handleInput = function(input, allowedKeys) {
 	if (input == 'up') {
 		player.y -=verticalMove;
-		/* if player completely reaches the water, add 200 to score, add a try,
-		send player back to start, update onscreen score/lives */
+		/* if player reaches the water, add 200 to score, add a life,
+		update onscreen score/lives, send player back to start. */
 		if (player.y <= water) {
 			score += 200;
 			lives += 1;
@@ -142,6 +164,7 @@ Player.prototype.handleInput = function(input, allowedKeys) {
 		}
 	}
 };
+//defines treasures to be collected for extra points
 function Treasure(sprite, x, y) {
 	this.sprite = sprite;
 	this.x = x;
@@ -154,19 +177,21 @@ Treasure.prototype.render = function() {
 
 function checkCollisions() {
 	//check player-enemy colllisons
-	//loop through each enemy
+	//loop through each enemy...
 	for (i = 0; i < allEnemies.length; i++) {
-		//see if y values match exactly and x values are within 80 in either direction
-		//the value of 80 helps eliminate collisons of sprite margins
-		if (player.y == allEnemies[i].y && Math.abs(player.x - allEnemies[i].x) < 80) {
+		//...see if y values match exactly and x values are within 80 in either
+		//direction. the value 80 eliminates collisons of transparent margins
+		if (player.y == allEnemies[i].y && Math.abs(player.x - 
+				allEnemies[i].x) < 80) {
+			//removes a life and send player back to start
 			lives -= 1;
 			player.reset();
 		}
 	}
 	//check player-treasure collisons
-	//loop through each treasure
+	//loop through each treasure...
 	for (i = 0; i < allTreasures.length; i++) {
-		//see if x and y values match
+		//...see if x and y values match
 		if (player.x == allTreasures[i].x && player.y == allTreasures[i].y) {
 			//remove the treasures from the board's visible area
 			allTreasures[i].x = -300;
@@ -188,8 +213,9 @@ var allEnemies = [];
 //loop thru this function pushing six enemies to allEnemies
 var newEnemy = function() {
 	for (i=0; i < 6; i++) {
-		//x[0] varies start point from just off the board to about halfway across the board...
-		//...and x[1] varies placement off (to the left) of the board
+		//x[0] varies start point from just off the board to about halfway
+		//across the board, and x[1] varies placement off (to the left) 
+		//of the board
 		var x = [((Math.random() - 0.2) * 450), ((Math.random() * -500) - 200)];
 		//y values chosen to center enemies vertically on path
 		var y = [64, 147, 230];
@@ -205,10 +231,10 @@ newEnemy();
 var player = new Player();
 
 var allTreasures = [];
-//loop through this function and push one, two or three treasures to allTreasures
+//loop through this function, push one, two or three treasures to allTreasures
 var newTreasure = function() {
 	//chose randomly among the three treasure sprites and place them randomly
-	//in the six squares of the treasure area (problem - can put two or three in one square)
+	//in the six squares of the treasure area
 	for (i = 0; i <= (threeOptions()); i++) {
 		var treasure = new Treasure(treasureSprite[threeOptions()], 
 		   treasureX[threeOptions()], treasureY[twoOptions()]);
