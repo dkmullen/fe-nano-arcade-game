@@ -1,4 +1,4 @@
-//Boundaries of the game board
+//Boundaries of the game board (x or y values)
 var leftWall = 3;
 var rightWall = 403;
 var bottomWall = 396;
@@ -6,22 +6,10 @@ var water = 63;
 //starting and reset point for the player
 var startX = 203;
 var startY = 396;
-//boundaries of the six-square treasure area, to be chosen and paired randomly
-var treasureX = [103, 203, 303];
-var treasureY = [147, 64];
-//three images to be used for treasure
-var treasureSprite = ['images/Key.png', 
-					  'images/Star.png',
-					  'images/Gem Blue.png'
-					 ];
-//two frequently-used math formulas
-//the first picks between 0 and 1
-var twoOptions = function() {
-	return Math.round(Math.random());
-};
-//and the second picks from 0, 1, and 2
-var threeOptions = function() {
-	return Math.floor(Math.random()* 3);
+
+//a frequently-used formula for picking n random numbers
+var randNum = function(n) {
+	return Math.floor(Math.random()* n);
 };
 //variables to keep track of lives remaining, score and high score
 var lives = 3;
@@ -39,7 +27,7 @@ var scoring = function() {
 //calls the function when the game loads
 scoring();
 
-//an array storing all the player images
+//five possible player images
 var playerImages = ['images/char-boy.png',
 					'images/char-horn-girl.png',
 					'images/char-pink-girl.png',
@@ -47,6 +35,8 @@ var playerImages = ['images/char-boy.png',
 					'images/char-cat-girl.png'
 				   ];
 
+//add all player images to the html and add a listener for clicks...
+//which allows user to change player image at any time
 document.getElementById("sprite1").addEventListener("click", function()
 	{player.sprite = playerImages[0];});
 document.getElementById("sprite2").addEventListener("click", function()
@@ -96,7 +86,7 @@ Enemy.prototype.render = function() {
 // a handleInput() method.
 function Player(sprite, x, y) {
 	//pick one of the five player sprites at random to start the game
-	this.sprite = playerImages[Math.floor(Math.random()* 5)];
+	this.sprite = playerImages[randNum(5)];
 	//position the sprite at the start point
 	this.x = startX;
 	this.y = startY;
@@ -114,11 +104,10 @@ Player.reset = function () {
 		if (score > highScore) {
 			highScore = score;
 		}
+		//resets score, lives for new game
 		score = 0;
 		lives = 3;
-		//empties allTreasures and allEnemies and rebuilds them
-		allTreasures = [];
-		allEnemies = [];
+		//calls fresh treasure and enemy functions
 		newTreasure();
 		newEnemy();
 	}
@@ -171,7 +160,7 @@ Player.prototype.handleInput = function(input, allowedKeys) {
 };
 //defines treasures to be collected for extra points
 function Treasure(sprite, x, y) {
-	this.sprite = sprite;
+	this.sprite = sprite
 	this.x = x;
 	this.y = y;
 };
@@ -217,6 +206,9 @@ function checkCollisions() {
 var allEnemies = [];
 //loop thru this function pushing six enemies to allEnemies
 var newEnemy = function() {
+	//empty out allEnemies by setting length to zero. 
+	//to create a new set of enemies with each new game
+	allEnemies.length = 0;
 	for (i=0; i < 6; i++) {
 		//x[0] varies start point from just off the board to about halfway
 		//across the board, and x[1] varies placement off (to the left) 
@@ -227,8 +219,8 @@ var newEnemy = function() {
 		//provides a variety of speeds
 		speed = ((Math.random() * 600) + 200);
 		//choose x[0] or x[1] and y[0], y[1] or y[2]
-		var n = new Enemy(this.sprite, x[twoOptions()], y[threeOptions()], speed);
-		allEnemies.push(n);			
+		var enemy = new Enemy(this.sprite, x[randNum(2)], y[randNum(3)], speed);
+		allEnemies.push(enemy);			
 	}
 };
 newEnemy();
@@ -238,11 +230,22 @@ var player = new Player();
 var allTreasures = [];
 //loop through this function, push one, two or three treasures to allTreasures
 var newTreasure = function() {
-	//chose randomly among the three treasure sprites and place them randomly
-	//in the six squares of the treasure area
-	for (i = 0; i <= (threeOptions()); i++) {
-		var treasure = new Treasure(treasureSprite[threeOptions()], 
-		   treasureX[threeOptions()], treasureY[twoOptions()]);
+	//empty out allTreasures by setting length to zero. 
+	//to create a new set of treasures with each new game
+	allTreasures.length = 0;
+	//three images to be used for treasure
+	var treasureSprite = ['images/Key.png', 
+						  'images/Star.png',
+						  'images/Gem Blue.png'
+						 ];
+	//boundaries of the six-square treasure area, chosen and paired randomly
+	var treasureX = [103, 203, 303];
+	var treasureY = [147, 64];
+	//chose randomly among the three treasure sprites and place 1, 2 or 3
+	//treasures in the six squares of the treasure area
+	for (i = 0; i <= (randNum(3)); i++) {
+		var treasure = new Treasure(treasureSprite[randNum(3)], 
+		   treasureX[randNum(3)], treasureY[randNum(2)]);
 		allTreasures.push(treasure);
 	}
 };
