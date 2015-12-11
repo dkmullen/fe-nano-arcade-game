@@ -1,8 +1,9 @@
-//Boundaries of the game board (x or y values)
+ //Boundaries of the game board (x or y values)
 var leftWall = 3;
 var rightWall = 403;
 var bottomWall = 396;
 var water = 63;
+
 //starting and reset point for the player
 var startX = 203;
 var startY = 396;
@@ -11,10 +12,12 @@ var startY = 396;
 var randNum = function(n) {
 	return Math.floor(Math.random()* n);
 };
+
 //variables to keep track of lives remaining, score and high score
 var lives = 3;
 var score = 0;
 var highScore = 0;
+
 //a function to put lives, score, high score on the screen (in the DOM)
 var scoring = function() {
 	document.getElementById("score_box").innerHTML = 
@@ -33,7 +36,7 @@ var playerImages = ['images/char-boy.png',
 					'images/char-pink-girl.png',
 					'images/char-princess-girl.png',
 					'images/char-cat-girl.png'
-				   ];
+	];
 
 //add all player images to the html and add a listener for clicks...
 //which allows user to change player image at any time
@@ -90,7 +93,7 @@ function Player(sprite, x, y) {
 	//position the sprite at the start point
 	this.x = startX;
 	this.y = startY;
-};
+}
 	
 Player.reset = function () {
 	//reset puts player back to the start, updates score and lives...
@@ -163,7 +166,7 @@ function Treasure(sprite, x, y) {
 	this.sprite = sprite
 	this.x = x;
 	this.y = y;
-};
+}
 Treasure.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
@@ -196,7 +199,7 @@ function checkCollisions() {
 			scoring();
 		}
 	}
-};
+}
 
 
 // Now instantiate your objects.
@@ -236,16 +239,19 @@ var newTreasure = function() {
 	//three images to be used for treasure
 	var treasureSprite = ['images/Key.png', 
 						  'images/Star.png',
-						  'images/Gem Blue.png'
-						 ];
-	//boundaries of the six-square treasure area, chosen and paired randomly
-	var treasureX = [103, 203, 303];
-	var treasureY = [147, 64];
-	//chose randomly among the three treasure sprites and place 1, 2 or 3
-	//treasures in the six squares of the treasure area
-	for (i = 0; i <= (randNum(3)); i++) {
-		var treasure = new Treasure(treasureSprite[randNum(3)], 
-		   treasureX[randNum(3)], treasureY[randNum(2)]);
+						  'images/Gem Blue.png',
+						  'images/Gem Orange.png',
+						  'images/Heart.png'
+	];
+	//boundaries of the 15-square treasure area (the gray stone squares)
+	var treasureX = [3, 103, 203, 303, 403];
+	var treasureY = [230, 147, 64];
+	//run loop at least twice and as many as five times
+	for (i = 0; i <= (randNum(4) + 1); i++) {
+		//chose randomly among the treasure sprites
+		var treasure = new Treasure(treasureSprite[randNum(5)], 
+		//place treasures from left to right w/unique x, random y
+		   treasureX[i], treasureY[randNum(3)]);
 		allTreasures.push(treasure);
 	}
 };
@@ -260,6 +266,5 @@ document.addEventListener('keyup', function(e) {
         39: 'right',
         40: 'down'
     };
-
     player.handleInput(allowedKeys[e.keyCode]);
 });
