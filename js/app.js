@@ -104,7 +104,9 @@ function Player(sprite, x, y) {
     //position the sprite at the start point
     this.x = START_X;
     this.y = START_Y;
-}
+};
+//jshint calls this semicolon unnecessary. Is it needed since the 
+//function isn't being called?
 
 Player.prototype.reset = function() {
     //reset puts player back to the start, updates score and lives...
@@ -144,31 +146,36 @@ Player.prototype.render = function() {
 
 //The following controls the player's movement
 Player.prototype.handleInput = function(input, allowedKeys) {
-    if (input === 'up') {
-        this.y -= VERTICAL_MOVE;
-        /* if player reaches the water, add 200 to score, add a life,
-        update onscreen score/lives, send player back to start. */
-        if (this.y <= WATER) {
-            score += 200;
-            lives += 1;
-            this.reset();
-            scoring();
-        }
-    } else if (input === 'down') {
-        //moves player down unless player is at bottom wall
-        if (this.y < BOTTOM_WALL) {
-            this.y += VERTICAL_MOVE;
-        }
-    } else if (input === 'left') {
-        // moves player left unless at left wall
-        if (this.x > LEFT_WALL) {
-            this.x -= HORIZONTAL_MOVE;
-        }
-    } else if (input === 'right') {
-        //moves player right unless at right wall
-        if (this.x < RIGHT_WALL) {
-            this.x += HORIZONTAL_MOVE;
-        }
+    switch (input) {
+        case 'up':
+            this.y -= VERTICAL_MOVE;
+            /* if player reaches the water, add 200 to score, add a life,
+            update onscreen score/lives, send player back to start. */
+            if (this.y <= WATER) {
+                score += 200;
+                lives += 1;
+                this.reset();
+                scoring();
+            }
+            break;
+        case 'down':
+            //moves player down unless player is at bottom wall
+            if (this.y < BOTTOM_WALL) {
+                this.y += VERTICAL_MOVE;
+            }
+            break;
+        case 'left':
+            // moves player left unless at left wall
+            if (this.x > LEFT_WALL) {
+                this.x -= HORIZONTAL_MOVE;
+            }
+            break;
+        case 'right':
+            //moves player right unless at right wall
+            if (this.x < RIGHT_WALL) {
+                this.x += HORIZONTAL_MOVE;
+            }
+            break;
     }
 };
 
@@ -177,7 +184,9 @@ function Treasure(sprite, x, y) {
     this.sprite = sprite;
     this.x = x;
     this.y = y;
-}
+};
+//jshint calls this semicolon unnecessary. Is it needed since the 
+//function isn't being called?
 
 Treasure.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
@@ -189,7 +198,7 @@ Player.prototype.checkCollisions = function() {
     for (i = 0; i < allEnemies.length; i++) {
         //...see if y values match exactly and x values are within 80 in either
         //direction. the value 80 eliminates collisons of transparent margins
-        if (this.y == allEnemies[i].y && Math.abs(player.x -
+        if (this.y == allEnemies[i].y && Math.abs(this.x -
                 allEnemies[i].x) < 80) {
             //removes a life and send player back to start
             lives -= 1;
