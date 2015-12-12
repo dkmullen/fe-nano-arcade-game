@@ -20,6 +20,8 @@ Each time you reach the water, you earn an extra life.
 You get 200 POINTS whenever you reach the water and 100 POINTS for each 
 treasure you pick up along the way.
 
+When you clear off all the treasures, more will appear!
+
 This game keeps track of your score for the current game and also your high
 score. NOTE that the high score RESETS if you close or refresh the browser tab.
 

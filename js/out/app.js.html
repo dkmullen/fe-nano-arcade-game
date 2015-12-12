@@ -1,4 +1,32 @@
-/**
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: app.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: app.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
  * 'use strict'; commented out because it throws two unsolved errors
  * @todo resolve
  */
@@ -38,11 +66,11 @@ var highScore = 0;
  */
 var scoring = function() {
     document.getElementById("score_box").innerHTML =
-        "Score: <strong>" + score + "</strong> ---";
+        "Score: &lt;strong>" + score + "&lt;/strong> ---";
     document.getElementById("lives_remaining").innerHTML =
-        "Lives Remaining: <strong>" + lives + "</strong> ---";
+        "Lives Remaining: &lt;strong>" + lives + "&lt;/strong> ---";
     document.getElementById("high_score").innerHTML =
-        "Your High Score: <strong>" + highScore + "</strong>";
+        "Your High Score: &lt;strong>" + highScore + "&lt;/strong>";
 };
 
 /**calls the function when the game loads*/
@@ -85,7 +113,7 @@ function Enemy(sprite, x, y, speed) {
     this.x = x;
     this.y = y;
     this.speed = speed;
-}
+};
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
@@ -172,7 +200,7 @@ Player.prototype.handleInput = function(input, allowedKeys) {
             this.y -= VERTICAL_MOVE;
             /* if player reaches the water, add 200 to score, add a life,
             update onscreen score/lives, send player back to start. */
-            if (this.y <= WATER) {
+            if (this.y &lt;= WATER) {
                 score += 200;
                 lives += 1;
                 this.reset();
@@ -181,7 +209,7 @@ Player.prototype.handleInput = function(input, allowedKeys) {
             break;
         case 'down':
             //moves player down unless player is at bottom wall
-            if (this.y < BOTTOM_WALL) {
+            if (this.y &lt; BOTTOM_WALL) {
                 this.y += VERTICAL_MOVE;
             }
             break;
@@ -193,7 +221,7 @@ Player.prototype.handleInput = function(input, allowedKeys) {
             break;
         case 'right':
             //moves player right unless at right wall
-            if (this.x < RIGHT_WALL) {
+            if (this.x &lt; RIGHT_WALL) {
                 this.x += HORIZONTAL_MOVE;
             }
             break;
@@ -205,11 +233,11 @@ Player.prototype.handleInput = function(input, allowedKeys) {
 Player.prototype.checkCollisions = function() {
     //check player-enemy collisions
     //loop through each enemy...
-    for (i = 0; i < allEnemies.length; i++) {
+    for (i = 0; i &lt; allEnemies.length; i++) {
         //...see if y values match exactly and x values are within 80 in either
         //direction. the value 80 eliminates collisions of transparent margins
-        if (this.y == allEnemies[i].y && Math.abs(this.x -
-                allEnemies[i].x) < 80) {
+        if (this.y == allEnemies[i].y &amp;&amp; Math.abs(this.x -
+                allEnemies[i].x) &lt; 80) {
             //removes a life and send player back to start
             lives -= 1;
             this.reset();
@@ -217,9 +245,9 @@ Player.prototype.checkCollisions = function() {
     }
     //check player-treasure collisions
     //loop through each treasure...
-    for (i = 0; i < allTreasures.length; i++) {
+    for (i = 0; i &lt; allTreasures.length; i++) {
         //...see if x and y values match
-        if (this.x == allTreasures[i].x && this.y == allTreasures[i].y) {
+        if (this.x == allTreasures[i].x &amp;&amp; this.y == allTreasures[i].y) {
             //remove the treasures from the board's visible area
             allTreasures[i].x = -300;
             allTreasures[i].y = 396;
@@ -266,7 +294,7 @@ var newEnemy = function() {
     //empty out allEnemies by setting length to zero. 
     //to create a new set of enemies with each new game
     allEnemies.length = 0;
-    for (i = 0; i < 6; i++) {
+    for (i = 0; i &lt; 6; i++) {
         //x[0] varies start point from just off the board to about halfway
         //across the board, and x[1] varies placement off (to the left) 
         //of the board
@@ -302,7 +330,7 @@ var newTreasure = function() {
     var treasureX = [3, 103, 203, 303, 403];
     var treasureY = [230, 147, 64];
     //run loop at least twice and as many as five times
-    for (i = 0; i <= (randNum(4) + 1); i++) {
+    for (i = 0; i &lt;= (randNum(4) + 1); i++) {
         //chose randomly among the treasure sprites
         var treasure = new Treasure(treasureSprite[randNum(5)],
             //place treasures from left to right w/unique x, random y
@@ -323,4 +351,26 @@ document.addEventListener('keyup', function(e) {
         40: 'down'
     };
     player.handleInput(allowedKeys[e.keyCode]);
-});
+});</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Enemy.html">Enemy</a></li><li><a href="Player.html">Player</a></li><li><a href="Treasure.html">Treasure</a></li></ul><h3>Global</h3><ul><li><a href="global.html#LEFT_WALL">LEFT_WALL</a></li><li><a href="global.html#lives">lives</a></li><li><a href="global.html#playerImages">playerImages</a></li><li><a href="global.html#randNum">randNum</a></li><li><a href="global.html#scoring">scoring</a></li><li><a href="global.html#START_X">START_X</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Sat Dec 12 2015 13:00:16 GMT-0500 (Eastern Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
