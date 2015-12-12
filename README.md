@@ -9,7 +9,6 @@ Use git to clone this repository:
 https://github.com/dkmullen/fe-nano-arcade-game
 
 Then open the index.html file and the game will start
-=====================================================
 
 HOW TO PLAY: Use the arrow keys to move your player up across the grass and 
 the stones to the water without getting hit by a bug. 

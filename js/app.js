@@ -1,11 +1,11 @@
 //'use strict';
-//Boundaries of the game board (x or y values)
+/**Boundaries of the game board (x or y values)*/
 var LEFT_WALL = 3;
 var RIGHT_WALL = 403;
 var BOTTOM_WALL = 396;
 var WATER = 63;
 
-//starting and reset point for the player
+/**starting and reset point for the player*/
 var START_X = 203;
 var START_Y = 396;
 
@@ -138,6 +138,7 @@ Player.prototype.update = function(dt) {
     //values chosen to keep player roughly centered in the squares
     VERTICAL_MOVE = 83;
     HORIZONTAL_MOVE = 100;
+    this.checkCollisions();
 };
 
 Player.prototype.render = function() {
@@ -179,6 +180,43 @@ Player.prototype.handleInput = function(input, allowedKeys) {
     }
 };
 
+//made this part of Player prototype rather than Enemy since player collision
+//must be checked against enemies AND treasure
+Player.prototype.checkCollisions = function() {
+    //check player-enemy collisions
+    //loop through each enemy...
+    for (i = 0; i < allEnemies.length; i++) {
+        //...see if y values match exactly and x values are within 80 in either
+        //direction. the value 80 eliminates collisions of transparent margins
+        if (this.y == allEnemies[i].y && Math.abs(this.x -
+                allEnemies[i].x) < 80) {
+            //removes a life and send player back to start
+            lives -= 1;
+            this.reset();
+        }
+    }
+    //check player-treasure collisions
+    //loop through each treasure...
+    for (i = 0; i < allTreasures.length; i++) {
+        //...see if x and y values match
+        if (this.x == allTreasures[i].x && this.y == allTreasures[i].y) {
+            //remove the treasures from the board's visible area
+            allTreasures[i].x = -300;
+            allTreasures[i].y = 396;
+            //remove the treasure from the allTreasures array
+            allTreasures.splice([i], 1);
+            //if all the treasures are gone, respawn them!
+            if (allTreasures.length === 0) {
+                newTreasure();
+            }
+            //award the player 100 points
+            score += 100;
+            //update the scoring displayed on screen
+            scoring();
+        }
+    }
+};
+
 //defines treasures to be collected for extra points
 function Treasure(sprite, x, y) {
     this.sprite = sprite;
@@ -191,36 +229,6 @@ function Treasure(sprite, x, y) {
 Treasure.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
-
-Player.prototype.checkCollisions = function() {
-    //check player-enemy colllisons
-    //loop through each enemy...
-    for (i = 0; i < allEnemies.length; i++) {
-        //...see if y values match exactly and x values are within 80 in either
-        //direction. the value 80 eliminates collisons of transparent margins
-        if (this.y == allEnemies[i].y && Math.abs(this.x -
-                allEnemies[i].x) < 80) {
-            //removes a life and send player back to start
-            lives -= 1;
-            this.reset();
-        }
-    }
-    //check player-treasure collisons
-    //loop through each treasure...
-    for (i = 0; i < allTreasures.length; i++) {
-        //...see if x and y values match
-        if (this.x == allTreasures[i].x && this.y == allTreasures[i].y) {
-            //remove the treasures from the board's visible area
-            allTreasures[i].x = -300;
-            allTreasures[i].y = 396;
-            //award the player 100 points
-            score += 100;
-            //update the scoring displayed on screen
-            scoring();
-        }
-    }
-};
-
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
@@ -257,7 +265,7 @@ var newTreasure = function() {
     //empty out allTreasures by setting length to zero. 
     //to create a new set of treasures with each new game
     allTreasures.length = 0;
-    //three images to be used for treasure
+    //images to be used for treasure
     var treasureSprite = ['images/Key.png',
         'images/Star.png',
         'images/Gem Blue.png',
