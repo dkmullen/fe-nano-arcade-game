@@ -1,19 +1,7 @@
 /**
- * 'use strict'; commented out because it throws two unsolved errors
- * @todo resolve
- */
-/**
- * Boundaries of the game board (x or y values)
- * @constant
- */
-var LEFT_WALL = 3;
-var RIGHT_WALL = 403;
-var BOTTOM_WALL = 396;
-var WATER = 63;
-
-/**
  * starting and reset point for the player
  * @constant
+ * @todo remove from global scope  
  */
 var START_X = 203;
 var START_Y = 396;
@@ -22,12 +10,14 @@ var START_Y = 396;
  * a frequently-used formula for picking n random numbers
  * @function
  */
- 
 var randNum = function(n) {
     return Math.floor(Math.random() * n);
 };
 
-/**variables to keep track of lives remaining, score and high score*/
+/**
+ * variables to keep track of lives remaining, score and high score
+ * @todo remove from global scope
+ */
 var lives = 3;
 var score = 0;
 var highScore = 0;
@@ -48,7 +38,10 @@ var scoring = function() {
 /**calls the function when the game loads*/
 scoring();
 
-/**five possible player images*/
+/**
+ * five possible player images
+ * @todo remove from global scope
+ */
 var playerImages = ['images/char-boy.png',
     'images/char-horn-girl.png',
     'images/char-pink-girl.png',
@@ -80,33 +73,35 @@ document.getElementById("sprite5").addEventListener("click", function() {
  * @constructor
  */
 function Enemy(sprite, x, y, speed) {
-    // uses a helper we've provided to easily load images
+    /** uses a helper we've provided to easily load images*/
     this.sprite = 'images/enemy-bug.png';
     this.x = x;
     this.y = y;
     this.speed = speed;
 }
 
-// Update the enemy's position, required method for game
-// Parameter: dt, a time delta between ticks
+/** Update the enemy's position, required method for game
+ *  Parameter: dt, a time delta between ticks
+ */
 Enemy.prototype.update = function(dt) {
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
+    /** You should multiply any movement by the dt parameter
+     * which will ensure the game runs at the same speed for
+     * all computers. */
     this.x += this.speed * dt;
-    if (this.x > 500) {
+	var offTheBoard = 500;
+    if (this.x > offTheBoard) {
         this.reset();
     }
 };
 
-//Send enemies back to a random spot with a negative x value
-//and a new random speed
+/** Send enemies back to a random spot with a negative x value
+ * and a new random speed */
 Enemy.prototype.reset = function() {
     this.x = ((Math.random() * -900) - 100);
     this.speed = (Math.random() * 400) + 200;
 };
 
-// Draw the enemy on the screen, required method for game
+/** Draw the enemy on the screen, required method for game */
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
@@ -121,12 +116,7 @@ function Player(sprite, x, y) {
     //position the sprite at the start point
     this.x = START_X;
     this.y = START_Y;
-/**
- * jshint calls the following semicolon unnecessary, 
- * udacity reviewer calls for it
- * @todo resolve
- */
-};
+}
 
 Player.prototype.reset = function() {
     //reset puts player back to the start, updates score and lives...
@@ -156,8 +146,7 @@ Player.prototype.update = function(dt) {
     // which will ensure the game runs at the same speed for
     // all computers.
     //values chosen to keep player roughly centered in the squares
-    VERTICAL_MOVE = 83;
-    HORIZONTAL_MOVE = 100;
+
     this.checkCollisions();
 };
 
@@ -167,7 +156,17 @@ Player.prototype.render = function() {
 
 //The following controls the player's movement
 Player.prototype.handleInput = function(input, allowedKeys) {
-    switch (input) {
+    var VERTICAL_MOVE = 83;
+    var HORIZONTAL_MOVE = 100;
+	/**
+	 * Boundaries of the game board (x or y values)
+	 * @constant
+	 */
+	var LEFT_WALL = 3;
+	var RIGHT_WALL = 403;
+	var BOTTOM_WALL = 396;
+	var WATER = 63;
+	switch (input) {
         case 'up':
             this.y -= VERTICAL_MOVE;
             /* if player reaches the water, add 200 to score, add a life,
@@ -245,12 +244,7 @@ function Treasure(sprite, x, y) {
     this.sprite = sprite;
     this.x = x;
     this.y = y;
-/**
- * jshint calls the following semicolon unnecessary, 
- * udacity reviewer calls for it
- * @todo resolve
- */
-};
+}
 
 Treasure.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
@@ -263,19 +257,20 @@ Treasure.prototype.render = function() {
 var allEnemies = [];
 //loop thru this function pushing six enemies to allEnemies
 var newEnemy = function() {
+	//'use strict';
     //empty out allEnemies by setting length to zero. 
     //to create a new set of enemies with each new game
     allEnemies.length = 0;
-    for (i = 0; i < 6; i++) {
-        //x[0] varies start point from just off the board to about halfway
-        //across the board, and x[1] varies placement off (to the left) 
-        //of the board
-        var x = [((Math.random() - 0.2) * 450), ((Math.random() * -500) - 200)];
-        //y values chosen to center enemies vertically on path
-        var y = [64, 147, 230];
-        //provides a variety of speeds
-        speed = ((Math.random() * 600) + 200);
-        //choose x[0] or x[1] and y[0], y[1] or y[2]
+	//x[0] varies start point from just off the board to about halfway
+	//across the board, and x[1] varies placement off (to the left) 
+	//of the board
+	x = [((Math.random() - 0.2) * 450), ((Math.random() * -500) - 200)];
+	//y values chosen to center enemies vertically on path
+	y = [64, 147, 230];
+	//provides a variety of speeds
+	speed = ((Math.random() * 600) + 200);
+	//choose x[0] or x[1] and y[0], y[1] or y[2]
+    for (i = 0; i <= 5; i++) {
         var enemy = new Enemy(this.sprite, x[randNum(2)], y[randNum(3)], speed);
         allEnemies.push(enemy);
     }
